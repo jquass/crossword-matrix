@@ -39,32 +39,34 @@ testCrosswordMatrix(
 );
 
 testCrosswordMatrix(
-    '*** Testing vertical puzzle template (column 2 : .;,.)',
+    '*** Testing vertical puzzle template (column 2: .;,..)',
     [
         [SOLID, SOLID, WILD, SOLID, SOLID],
         ['O', SOLID, VOWEL, SOLID, 'I'],
         ['P', 'A', CONSONANT, 'E', 'R'],
         ['T', SOLID, WILD, SOLID, 'E'],
-        [SOLID, SOLID, BLANK, SOLID, SOLID],
+        [SOLID, SOLID, WILD, SOLID, SOLID],
     ]
 );
 
 testCrosswordMatrix(
-    '*** Testing horizontal puzzle template (row 2 : .;,.)',
+    '*** Testing horizontal puzzle template (row 2: .;,..)',
     [
         [SOLID, SOLID, 'T', SOLID, SOLID],
         ['O', SOLID, 'A', SOLID, 'I'],
-        [WILD, VOWEL, CONSONANT, WILD, BLANK],
+        [WILD, VOWEL, CONSONANT, WILD, WILD],
         ['T', SOLID, 'E', SOLID, 'E'],
         [SOLID, SOLID, 'R', SOLID, SOLID],
     ]
+
+
 );
 
 testCrosswordMatrix(
-    '*** Testing standalone vertical spaced template (column 3 : S.A,)',
+    '*** Testing standalone vertical spaced template (column 3 : S,.A,)',
     [
-        EMPTY_PUZZLE_ROW,
         [BLANK, BLANK, BLANK, 'S', BLANK],
+        [BLANK, BLANK, BLANK, CONSONANT, BLANK],
         [BLANK, BLANK, BLANK, WILD, BLANK],
         [BLANK, BLANK, BLANK, 'A', BLANK],
         [BLANK, BLANK, BLANK, CONSONANT, BLANK],
@@ -93,6 +95,7 @@ testCrosswordMatrix(
     ]
 );
 
+// TODO Not this, no pattern here, must be full length or SOLIDS
 testCrosswordMatrix(
     '*** Testing horizontal pattern with blank ends (row 0 : C;,)',
     [
