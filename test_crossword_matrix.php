@@ -95,12 +95,56 @@ testCrosswordMatrix(
     ]
 );
 
-// TODO Not this, no pattern here, must be full length or SOLIDS
 testCrosswordMatrix(
-    '*** Testing horizontal pattern with blank ends (row 0 : C;,)',
+    '*** Testing horizontal pattern with solid end (row 0 : R.;,)',
     [
-        [BLANK, 'C', VOWEL, CONSONANT, BLANK],
+        ['R', WILD, VOWEL, CONSONANT, SOLID],
         EMPTY_PUZZLE_ROW,
+        EMPTY_PUZZLE_ROW,
+        EMPTY_PUZZLE_ROW,
+        EMPTY_PUZZLE_ROW,
+    ]
+);
+
+testCrosswordMatrix(
+    '*** Testing horizontal pattern with solid start (row 0 : .;,S)',
+    [
+        [SOLID, WILD, VOWEL, CONSONANT, 'S'],
+        EMPTY_PUZZLE_ROW,
+        EMPTY_PUZZLE_ROW,
+        EMPTY_PUZZLE_ROW,
+        EMPTY_PUZZLE_ROW,
+    ]
+);
+
+
+testCrosswordMatrix(
+    '*** Testing horizontal pattern with blank ends (no match expected)',
+    [
+        EMPTY_PUZZLE_ROW,
+        [BLANK, WILD, VOWEL, CONSONANT, BLANK],
+        EMPTY_PUZZLE_ROW,
+        EMPTY_PUZZLE_ROW,
+        EMPTY_PUZZLE_ROW,
+    ]
+);
+
+testCrosswordMatrix(
+    '*** Testing horizontal pattern with blank end (no match expected)',
+    [
+        EMPTY_PUZZLE_ROW,
+        [CONSONANT, WILD, VOWEL, CONSONANT, BLANK],
+        EMPTY_PUZZLE_ROW,
+        EMPTY_PUZZLE_ROW,
+        EMPTY_PUZZLE_ROW,
+    ]
+);
+
+testCrosswordMatrix(
+    '*** Testing horizontal pattern with blank start (no match expected)',
+    [
+        EMPTY_PUZZLE_ROW,
+        [BLANK, WILD, VOWEL, CONSONANT, CONSONANT],
         EMPTY_PUZZLE_ROW,
         EMPTY_PUZZLE_ROW,
         EMPTY_PUZZLE_ROW,

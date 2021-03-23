@@ -1,13 +1,9 @@
 <?php
 
 // First tries to find a template in the rows, then the columns
-function findTemplate($puzzle)
+function findTemplate($puzzle): bool
 {
-    $success = findTemplateInScope($puzzle, 'row');
-    if (!$success) {
-        $transposedPuzzle = transposePuzzle($puzzle);
-        findTemplateInScope($transposedPuzzle, 'column');
-    }
+    return findTemplateInScope($puzzle, 'row') || findTemplateInScope(transposePuzzle($puzzle), 'column');
 }
 
 // Tries to find a template in scope (row/column)
@@ -28,36 +24,40 @@ function extractTemplate($values): array
 {
     $start = 0;
     $end = 0;
-    $foundField = false;
+    $foundField = 0;
     foreach ($values as $key => $value) {
-
-        // Letter or field, extend end of template
-        if (preg_match('/[.;,a-zA-Z]/', $value)) {
-            $end = $key;
-        }
-        // Once we've found a field, we mark $foundField as true
-        if (preg_match('/[.;,]/', $value)) {
-            $foundField = true;
-        }
-
-        // Check for non-pattern fields
-        if ($value == BLANK || preg_match('/[*]/', $value)) {
-            // If we've already found a field, we can return the pattern
-            if ($foundField) {
+        if ($value == SOLID) {
+            // If we've already found at least two template fields, we can return the pattern
+            if ($foundField >= 2) {
                 break;
             }
-            // Otherwise, reset the $start and $end and keep looking
             $start = $end = $key + 1;
+            $foundField = 0;
+            continue;
+        } else if ($value == BLANK) {
+            $start = $end = $key + 1;
+            $foundField = 0;
+            continue;
+        } else if (preg_match('/[.;,]/', $value)) {
+            $foundField++;
+            $end = $key;
+            continue;
+        } else if (preg_match('/[a-zA-Z]/', $value)) {
+            $end = $key;
+            continue;
         }
+
+        // If we're here, it's an unexpected character, so let's reset and continue
+        $start = $end = $key + 1;
+        $foundField = 0;
     }
     return $end == $start ? [] : array_slice($values, $start, $end - $start + 1);
 }
 
 // Checks the values for a template
-function findMatch($values)
+function findMatch($values): string|null
 {
-    $valuesString = implode($values);
-    preg_match(TEMPLATE_REGEX, $valuesString, $matches);
+    preg_match(TEMPLATE_REGEX, implode($values), $matches);
     return $matches ? $matches[0] : null;
 }
 
