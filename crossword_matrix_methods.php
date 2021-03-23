@@ -1,5 +1,9 @@
 <?php
 
+use JetBrains\PhpStorm\Pure;
+
+require 'crossword_matrix_constants.php';
+
 // First tries to find a template in the rows, then the columns
 function findTemplate($puzzle): bool
 {
@@ -10,11 +14,12 @@ function findTemplate($puzzle): bool
 function findTemplateInScope($puzzle, $scope): bool
 {
     foreach ($puzzle as $id => $values) {
-        $match = findMatch($values);
-        if ($match) {
-            print "Found template in " . $scope . " " . $id . ": '" . $match . "'" . PHP_EOL;
+        foreach (explode(SOLID, implode($values)) as $template) {
+            if (validateTemplate($template)) {
+                print "Found template in " . $scope . " " . $id . ": '" . $template . "'" . PHP_EOL;
             print_r(extractTemplate($values));
             return true;
+            }
         }
     }
     return false;
@@ -54,11 +59,13 @@ function extractTemplate($values): array
     return $end == $start ? [] : array_slice($values, $start, $end - $start + 1);
 }
 
-// Checks the values for a template
-function findMatch($values): string|null
+#[Pure] function validateTemplate($template): bool
 {
-    preg_match(TEMPLATE_REGEX, implode($values), $matches);
-    return $matches ? $matches[0] : null;
+    return $template
+        && !str_contains($template, BLANK)
+        && (substr_count($template, WILD) +
+            substr_count($template, CONSONANT) +
+            substr_count($template, VOWEL) >= 2);
 }
 
 // Transposes the puzzle, turning the rows to columns

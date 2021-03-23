@@ -1,7 +1,6 @@
 <?php
 
 require 'crossword_matrix_methods.php';
-require 'crossword_matrix_constants.php';
 
 print '*** STARTING TESTING ***' . PHP_EOL;
 
@@ -107,9 +106,9 @@ testCrosswordMatrix(
 );
 
 testCrosswordMatrix(
-    '*** Testing horizontal pattern with solid start (row 0 : .;,S)',
+    '*** Testing horizontal pattern with solid start (row 0 : .;RS)',
     [
-        [SOLID, WILD, VOWEL, CONSONANT, 'S'],
+        [SOLID, WILD, VOWEL, 'R', 'S'],
         EMPTY_PUZZLE_ROW,
         EMPTY_PUZZLE_ROW,
         EMPTY_PUZZLE_ROW,
