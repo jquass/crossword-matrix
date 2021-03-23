@@ -1,11 +1,6 @@
 <?php
 
 
-//start 1
-
-// password=j2750;
-
-
 $frompage = $_REQUEST['frompage'];
 
 if ($_COOKIE['isitme'] != "yes" and $frompage != "leadinpuzz") {
