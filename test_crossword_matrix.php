@@ -2,6 +2,8 @@
 
 require 'crossword_matrix_methods.php';
 
+const EMPTY_PUZZLE_ROW = [BLANK, BLANK, BLANK, BLANK, BLANK];
+
 print '*** STARTING TESTING ***' . PHP_EOL;
 
 testCrosswordMatrix(
