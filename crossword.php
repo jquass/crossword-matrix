@@ -113,7 +113,7 @@ while ($row = mysql_fetch_array($result)) {
 
         $d = $c - 1;
 
-        $thisValue = $puzzle{$d};
+        $thisValue = $puzzle[$d];
 
 
         if ($thisValue == "*") {

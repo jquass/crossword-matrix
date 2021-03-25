@@ -152,12 +152,39 @@ testCrosswordMatrix(
     ]
 );
 
+testCrosswordMatrix(
+    '*** Testing whitespace is stripped (row 3 : P.A,T)',
+    [
+        EMPTY_PUZZLE_ROW,
+        EMPTY_PUZZLE_ROW,
+        EMPTY_PUZZLE_ROW,
+        [' P ', WILD . ' ', ' A', ' ' . CONSONANT, 'T    '],
+        EMPTY_PUZZLE_ROW,
+    ]
+);
+
+
+testCrosswordMatrix(
+    '*** Testing vertical template in puzzle created from $_REQUEST (column 0 : S..)',
+    getPuzzleFromRequest(
+        [
+            'c1' => 'S', 'c2' => BLANK, 'c3' => BLANK, 'c4' => BLANK, 'c5' => BLANK,
+            'c6' => WILD, 'c7' => BLANK, 'c8' => BLANK, 'c9' => BLANK, 'c10' => BLANK,
+            'c11' => WILD, 'c12' => BLANK, 'c13' => BLANK, 'c14' => BLANK, 'c15' => BLANK,
+            'c16' => SOLID, 'c17' => BLANK, 'c18' => BLANK, 'c19' => BLANK, 'c20' => BLANK,
+            'c21' => BLANK, 'c22' => BLANK, 'c23' => BLANK, 'c24' => BLANK, 'c25' => BLANK,
+        ],
+        5
+    )
+);
+
+
 print "*** DONE ***" . PHP_EOL;
 
 
 function testCrosswordMatrix($msg, $matrix)
 {
     print $msg . PHP_EOL;
-    findTemplate($matrix);
+    print_r(findTemplate($matrix));
     print PHP_EOL;
 }
