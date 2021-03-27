@@ -10,19 +10,6 @@ const PUZZLE_SIZE = 15;
 // SETUP
 //
 
-$puzzle = getPuzzleFromRequest($_REQUEST, PUZZLE_SIZE);
-
-$template = findTemplate($puzzle);
-
-$oneDimensionalPuzzle = [];
-foreach ($puzzle as $puzzlePiece) {
-    $oneDimensionalPuzzle += $puzzlePiece;
-}
-
-$name = array_key_exists('name', $_REQUEST)
-    ? $_REQUEST['name']
-    : DEFAULT_PUZZLE_NAME;
-
 $puzzleId = array_key_exists('id', $_REQUEST)
     ? $_REQUEST['id']
     : null;
@@ -31,33 +18,47 @@ $savedPuzzle = $puzzleId
     ? getSavedPuzzle($puzzleId)
     : null;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    if ($puzzleId) {
-        print '<h3>...updating...</h3>';
+    $name = $savedPuzzle['puzzle_name'];
+    $puzzle = unserialize($savedPuzzle['puzzle']);
 
-        $savedPuzzle = updateSavedPuzzle($puzzleId, $name, $puzzle);
-        $success = $savedPuzzle ? true : false;
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    } else {
+    $name = array_key_exists('name', $_REQUEST)
+        ? $_REQUEST['name']
+        : DEFAULT_PUZZLE_NAME;
+    $puzzle = getPuzzleFromRequest($_REQUEST, PUZZLE_SIZE);
+
+    if (!$puzzleId) {
         print '<h3>...saving...</h3>';
 
         $puzzleId = savePuzzle($name, $puzzle);
         $success = $puzzleId ? true : false;
+
+    } else {
+        print '<h3>...updating...</h3>';
+
+        $savedPuzzle = updateSavedPuzzle($puzzleId, $name, $puzzle);
+        $success = $savedPuzzle ? true : false;
     }
 
     print $success
         ? '<h4>SUCCESS</h4>'
         : '<h4>ERROR</h4><pre>' . pg_last_error() . '</pre>';
 
-} else if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+} else {
     die('invalid request method : ' . $_SERVER['REQUEST_METHOD']);
 }
+
+$template = findTemplate($puzzle);
+$oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
 
 //
 // HTML
 //
 ?>
+
 
 <form name="<?= $name ?>" method="post">
 
@@ -69,8 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
            name="submit"><br>
 
     <?php
-    $n = 1;
-    while ($n <= PUZZLE_SIZE * PUZZLE_SIZE) {
+    for ($n = 1; $n <= PUZZLE_SIZE * PUZZLE_SIZE; $n++) {
         $name = 'c' . $n;
 
         $value = array_key_exists($name, $oneDimensionalPuzzle) ? $oneDimensionalPuzzle[$name] : BLANK;
@@ -86,12 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<input type=\"text\"
                     style=\"background-color:{$backgroundColor};text-align:center;font-weight:bold;font-family:courier;\" 
                     size=2
-                    name=\"{$name}\" 
+                    name=\"{$name}\"
+                    id=\"{$name}\"
                     value=\"{$value}\">";
 
         echo $n % PUZZLE_SIZE == 0 ? '<br/>' : '';
-
-        $n++;
     }
     ?>
 </form>
@@ -118,3 +117,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?= print_r($savedPuzzle) ?>
 </pre>
 
+
+<footer>
+    <script>
+        const puzzleSize = 15;
+
+        document.onkeydown = function (event) {
+            const element = document.activeElement;
+            if (element.id.match(/c[0-9]+/)) {
+                const idNumber = Number(element.id.substr(1));
+                let targetId;
+                switch (event.keyCode) {
+                    case 37:
+                        event.preventDefault();
+                        if ((idNumber - 1) % puzzleSize === 0) {
+                            return;
+                        }
+                        targetId = idNumber - 1;
+                        break;
+                    case 38:
+                        event.preventDefault();
+                        if (idNumber <= puzzleSize) {
+                            return;
+                        }
+                        targetId = idNumber - puzzleSize;
+                        break;
+                    case 39:
+                        event.preventDefault();
+                        if ((idNumber % puzzleSize === 0)) {
+                            return;
+                        }
+                        targetId = idNumber + 1;
+                        break;
+                    case 40:
+                        event.preventDefault();
+                        if (idNumber >= puzzleSize * puzzleSize - puzzleSize) {
+                            return;
+                        }
+                        targetId = idNumber + puzzleSize;
+                        break;
+                }
+
+                if (typeof targetId !== 'undefined') {
+                    const targetCell = 'c' + targetId;
+                    const target = document.getElementById(targetCell);
+                    target.focus();
+                }
+            }
+        };
+    </script>
+</footer>

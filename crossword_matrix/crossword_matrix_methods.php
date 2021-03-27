@@ -131,3 +131,16 @@ function transposePuzzle(array $puzzle): array
     }
     return $puzzle;
 }
+
+/**
+ * @param array[] $puzzle
+ * @return array
+ */
+function convertPuzzleToOneDimension(array $puzzle): array
+{
+    $oneDimensionalPuzzle = [];
+    foreach ($puzzle as $puzzlePiece) {
+        $oneDimensionalPuzzle += $puzzlePiece;
+    }
+    return $oneDimensionalPuzzle;
+}

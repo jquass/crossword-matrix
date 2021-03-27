@@ -86,6 +86,8 @@ function updateSavedPuzzle(int $id, string $name, array $puzzle): array|null
         ['id' => $id]
     );
 
+    pg_close($dbh);
+
     return $result ? getSavedPuzzle($id) : null;
 }
 
