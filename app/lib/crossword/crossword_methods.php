@@ -2,7 +2,11 @@
 
 use JetBrains\PhpStorm\Pure;
 
-require 'crossword_matrix_constants.php';
+const SOLID = '*';
+const WILD = '.';
+const CONSONANT = ',';
+const VOWEL = ';';
+const BLANK = ' ';
 
 /**
  * First looks in the puzzle rows then columns to find a matching pattern.

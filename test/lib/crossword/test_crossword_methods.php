@@ -1,6 +1,6 @@
 <?php
 
-require 'crossword_matrix_methods.php';
+require '../../../app/lib/crossword/crossword_methods.php';
 
 const EMPTY_PUZZLE_ROW = [BLANK, BLANK, BLANK, BLANK, BLANK];
 

@@ -1,7 +1,7 @@
 <?php
 
-require 'crossword_matrix/crossword_matrix_methods.php';
-require 'crossword_matrix/crossword_matrix_db.php';
+require '../../app/db/crossword_db.php';
+require '../../app/lib/crossword/crossword_methods.php';
 
 const DEFAULT_PUZZLE_NAME = 'New Puzzle';
 const PUZZLE_SIZE = 15;
@@ -10,42 +10,43 @@ const PUZZLE_SIZE = 15;
 // SETUP
 //
 
-$puzzleId = array_key_exists('id', $_REQUEST)
-    ? $_REQUEST['id']
-    : null;
+$puzzle = getPuzzleFromRequest($_REQUEST, PUZZLE_SIZE);
 
-$savedPuzzle = $puzzleId
-    ? getSavedPuzzle($puzzleId)
-    : null;
+$name = array_key_exists('name', $_REQUEST)
+    ? $_REQUEST['name']
+    : DEFAULT_PUZZLE_NAME;
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    $name = $savedPuzzle['puzzle_name'];
-    $puzzle = unserialize($savedPuzzle['puzzle']);
+    $puzzleId = array_key_exists('id', $_GET)
+        ? $_GET['id']
+        : null;
+
+    $savedPuzzle = $puzzleId
+        ? getSavedPuzzle($puzzleId)
+        : null;
+
+    if ($savedPuzzle) {
+        $name = $savedPuzzle['puzzle_name'];
+        $puzzle = unserialize($savedPuzzle['puzzle']);
+    }
 
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $name = array_key_exists('name', $_REQUEST)
-        ? $_REQUEST['name']
-        : DEFAULT_PUZZLE_NAME;
-    $puzzle = getPuzzleFromRequest($_REQUEST, PUZZLE_SIZE);
+    $puzzleId = array_key_exists('id', $_POST)
+        ? $_POST['id']
+        : null;
 
-    if (!$puzzleId) {
-        print '<h3>...saving...</h3>';
+    $savedPuzzle = $puzzleId
+        ? getSavedPuzzle($puzzleId)
+        : null;
 
+    if (!$savedPuzzle) {
         $puzzleId = savePuzzle($name, $puzzle);
-        $success = $puzzleId ? true : false;
-
+        $savedPuzzle = getSavedPuzzle($puzzleId);
     } else {
-        print '<h3>...updating...</h3>';
-
         $savedPuzzle = updateSavedPuzzle($puzzleId, $name, $puzzle);
-        $success = $savedPuzzle ? true : false;
     }
-
-    print $success
-        ? '<h4>SUCCESS</h4>'
-        : '<h4>ERROR</h4><pre>' . pg_last_error() . '</pre>';
 
 } else {
     die('invalid request method : ' . $_SERVER['REQUEST_METHOD']);
@@ -59,6 +60,7 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
 //
 ?>
 
+<a href="#" onclick="window.location='../index.php'+window.location.search;"><<< Puzzle Index</a>
 
 <form name="<?= $name ?>" method="post">
 
@@ -66,7 +68,7 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
 
     <input type="text" name="name" style="position:absolute;top:35px;left:400px;" value="<?= $name ?>">
 
-    <input type="submit" style="position:absolute;top:75px;left:400px;" value="<?= $puzzleId ? 'Update' : 'Save' ?>"
+    <input type="submit" style="position:absolute;top:75px;left:400px;" value="<?= $savedPuzzle ? 'Update' : 'Save' ?>"
            name="submit"><br>
 
     <?php
@@ -129,6 +131,7 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
                 let targetId;
                 switch (event.keyCode) {
                     case 37:
+                        // Left
                         event.preventDefault();
                         if ((idNumber - 1) % puzzleSize === 0) {
                             return;
@@ -136,6 +139,7 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
                         targetId = idNumber - 1;
                         break;
                     case 38:
+                        // Up
                         event.preventDefault();
                         if (idNumber <= puzzleSize) {
                             return;
@@ -143,6 +147,7 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
                         targetId = idNumber - puzzleSize;
                         break;
                     case 39:
+                        // Right
                         event.preventDefault();
                         if ((idNumber % puzzleSize === 0)) {
                             return;
@@ -150,6 +155,7 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
                         targetId = idNumber + 1;
                         break;
                     case 40:
+                        // Down
                         event.preventDefault();
                         if (idNumber >= puzzleSize * puzzleSize - puzzleSize) {
                             return;
