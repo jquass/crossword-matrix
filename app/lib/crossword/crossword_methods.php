@@ -127,7 +127,7 @@ function transposePuzzle(array $puzzle): array
         while ($cell <= $size * ($row + 1)) {
             $name = 'c' . $cell;
             $value = array_key_exists($name, $request) ? $request[$name] : BLANK;
-            $cleanedValue = str_replace(' ', '', $value) ?: BLANK;
+            $cleanedValue = strtoupper(str_replace(' ', '', $value)) ?: BLANK;
             $puzzle[$row][$name] = $cleanedValue;
             $cell++;
         }
@@ -147,4 +147,25 @@ function convertPuzzleToOneDimension(array $puzzle): array
         $oneDimensionalPuzzle += $puzzlePiece;
     }
     return $oneDimensionalPuzzle;
+}
+
+/**
+ * @param array[] $oneDimensionalPuzzle
+ * @return array
+ */
+function convertPuzzleToTwoDimensions(array $oneDimensionalPuzzle): array
+{
+    $rowLength = sqrt(sizeof($oneDimensionalPuzzle));
+    $puzzle = [];
+    $cell = 1;
+    $row = 0;
+    foreach ($oneDimensionalPuzzle as $puzzlePiece) {
+        $cellKey = 'c' . $cell;
+        if ($cell >= $rowLength * ($row + 1)) {
+            $row++;
+        }
+        $puzzle[$row][$cellKey] = $puzzlePiece;
+        $cell++;
+    }
+    return $puzzle;
 }

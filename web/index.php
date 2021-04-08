@@ -2,6 +2,10 @@
 
 require '../app/db/crossword_db.php';
 
+if ('GET' !== $_SERVER['REQUEST_METHOD']) {
+    die('invalid request method : ' . $_SERVER['REQUEST_METHOD']);
+}
+
 $puzzleId = array_key_exists('id', $_GET)
     ? $_GET['id']
     : null;
@@ -14,19 +18,20 @@ $savedPuzzles = getSavedPuzzles();
 
 ?>
 
-
 <html>
 
 <h1>Crossword Index</h1>
 
 <?php
 if ($savedPuzzle) {
-    // echo "<a href=\"crossword_matrix/index.php\" >Back - \"{$savedPuzzle['puzzle_name']}\"</a><br>";
+    echo "<button onclick=\"window.location=removeParam('id', 'crossword/index.php'+window.location.search)+'&id={$savedPuzzle['id']}';\"> Back to \"{$savedPuzzle['puzzle_name']}\" </button>";
 }
 ?>
 
-
-<button onclick="window.location=removeParam('id', 'crossword/index.php'+window.location.search);">Create New Puzzle</button>
+<button onclick="window.location=removeParam('id', 'crossword/index.php'+window.location.search);">Create New Puzzle
+</button>
+<button onclick="window.location=removeParam('id', 'dictionary/index.php'+window.location.search);">Manage Dictionary
+</button>
 
 <ul>
     <?php

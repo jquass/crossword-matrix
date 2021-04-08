@@ -1,6 +1,6 @@
 <?php
 
-const CONNECTION_STRING = 'host=localhost dbname=crossword_puzzles user=crossword_user';
+require_once 'db_constants.php';
 
 /**
  * @param string $name
@@ -96,62 +96,25 @@ function getSavedPuzzles(): array|null
 
 /**
  * @param int $id
- * @param string $name
  * @param array $puzzle
+ * @param string|null $name
  * @return array|null
  */
-function updateSavedPuzzle(int $id, string $name, array $puzzle): array|null
+function updateSavedPuzzle(int $id, array $puzzle, string $name = null): array|null
 {
     $dbh = pg_connect(CONNECTION_STRING);
     if (!$dbh) {
         return null;
     }
 
-    $result = pg_update($dbh,
-        'puzzles',
-        [
-            'puzzle_name' => $name,
-            'puzzle' => serialize($puzzle)
-        ],
-        ['id' => $id]
-    );
+    $params = ['puzzle' => serialize($puzzle)];
+    if ($name) {
+        $params['puzzle_name'] = $name;
+    }
+
+    $result = pg_update($dbh, 'puzzles', $params, ['id' => $id]);
 
     pg_close($dbh);
 
-    return $result ? getSavedPuzzle($id) : null;;
+    return $result ? getSavedPuzzle($id) : null;
 }
-
-/**
- * @param array $template
- * @return array
- */
-function getMatchingDictionaryIds(array $template): array
-{
-    $dbh = pg_connect(CONNECTION_STRING);
-    if (!$dbh) {
-        return [];
-    }
-
-    $regex = '^';
-    foreach ($template as $value) {
-        // TODO build regex for real
-        $regex .= $value;
-    }
-    $regex .= '$';
-
-    $result = pg_query_params($dbh,
-        'SELECT id FROM dictionary WHERE word ~* $1',
-        [$regex]
-    );
-    if (!$result) {
-        return [];
-    }
-
-    $row = pg_fetch_assoc($result);
-
-    pg_free_result($result);
-    pg_close($dbh);
-
-    return $row ?: [];
-}
-
