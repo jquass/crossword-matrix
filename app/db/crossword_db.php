@@ -7,7 +7,7 @@ require_once 'db_constants.php';
  * @param array $puzzle
  * @return int|null
  */
-function savePuzzle(string $name, array $puzzle): int|null
+function savePuzzle(string $name, array $puzzle): ?int
 {
     $dbh = pg_connect(CONNECTION_STRING);
     if (!$dbh) {
@@ -43,7 +43,7 @@ function savePuzzle(string $name, array $puzzle): int|null
  * @param int $id
  * @return array|null
  */
-function getSavedPuzzle(int $id): array|null
+function getSavedPuzzle(int $id): ?array
 {
     $dbh = pg_connect(CONNECTION_STRING);
     if (!$dbh) {
@@ -69,7 +69,7 @@ function getSavedPuzzle(int $id): array|null
 /**
  * @return array|null
  */
-function getSavedPuzzles(): array|null
+function getSavedPuzzles(): ?array
 {
     $dbh = pg_connect(CONNECTION_STRING);
     if (!$dbh) {
@@ -100,7 +100,7 @@ function getSavedPuzzles(): array|null
  * @param string|null $name
  * @return array|null
  */
-function updateSavedPuzzle(int $id, array $puzzle, string $name = null): array|null
+function updateSavedPuzzle(int $id, array $puzzle, string $name = null): ?array
 {
     $dbh = pg_connect(CONNECTION_STRING);
     if (!$dbh) {

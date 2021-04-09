@@ -7,7 +7,7 @@ require_once 'db_constants.php';
  * @param string $password
  * @return int|null
  */
-function saveUser(string $email, string $password): int|null
+function saveUser(string $email, string $password): ?int
 {
     $dbh = pg_connect(CONNECTION_STRING);
     if (!$dbh) {

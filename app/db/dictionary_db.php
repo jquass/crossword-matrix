@@ -39,7 +39,7 @@ function getDictionaryEntries(int $limit): array
  * @param int $id
  * @return array|null
  */
-function getDictionaryEntry(int $id): array|null
+function getDictionaryEntry(int $id): ?array
 {
     $dbh = pg_connect(CONNECTION_STRING);
     if (!$dbh) {
