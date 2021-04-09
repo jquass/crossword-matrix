@@ -7,11 +7,9 @@ include '../../app/includes/login.php';
 
 const LIMIT = 100;
 
-if ('GET' === $_SERVER['REQUEST_METHOD']) {
-    //
-} else if ('POST' === $_SERVER['REQUEST_METHOD']) {
+if ('POST' === $_SERVER['REQUEST_METHOD']) {
     insertWords($_REQUEST['words']);
-} else {
+} else if ('GET' !== $_SERVER['REQUEST_METHOD']) {
     die('invalid request method : ' . $_SERVER['REQUEST_METHOD']);
 }
 

@@ -35,6 +35,7 @@ if ('GET' === $_SERVER['REQUEST_METHOD']) {
 
     if (!array_key_exists('form_type', $_POST)) {
         header('Location: ' . $_SERVER['REQUEST_URI']);
+        exit();
     }
 
     switch ($_POST['form_type']) {
