@@ -2,6 +2,9 @@
 
 require '../../app/db/dictionary_db.php';
 
+require_once '../../app/db/users_db.php';
+include '../../app/includes/login.php';
+
 const LIMIT = 100;
 
 if ('GET' === $_SERVER['REQUEST_METHOD']) {

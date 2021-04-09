@@ -1,8 +1,11 @@
 <?php
 
-require '../../app/db/crossword_db.php';
-require '../../app/db/dictionary_db.php';
-require '../../app/lib/crossword/crossword_methods.php';
+require_once '../../app/db/crossword_db.php';
+require_once '../../app/db/dictionary_db.php';
+require_once '../../app/lib/crossword/crossword_methods.php';
+
+require_once '../../app/db/users_db.php';
+include '../../app/includes/login.php';
 
 const DEFAULT_PUZZLE_NAME = 'New Puzzle';
 const PUZZLE_SIZE = 15;
@@ -218,12 +221,6 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
             echo "<input type='hidden' name='form_type' value='puzzle_dictionary_match'>
                     <input type='hidden' name='puzzle_id' value='{$puzzleId}'>
                     <input type='hidden' name='template' value='{$serializedTemplate}'>
-
-                    
-                    
-                        
-                    
-                    
                 </form>";
         }
         ?>

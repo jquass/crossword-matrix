@@ -1,10 +1,9 @@
 <?php
 
-require '../app/db/crossword_db.php';
+require_once '../app/db/crossword_db.php';
+require_once '../app/db/users_db.php';
 
-if ('GET' !== $_SERVER['REQUEST_METHOD']) {
-    die('invalid request method : ' . $_SERVER['REQUEST_METHOD']);
-}
+include '../app/includes/login.php';
 
 $puzzleId = array_key_exists('id', $_GET)
     ? $_GET['id']
