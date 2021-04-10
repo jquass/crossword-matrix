@@ -83,10 +83,12 @@ function insertWords(string $words): bool
             continue;
         }
 
-        $insertResult = pg_query_params($dbh,
-            'INSERT INTO dictionary (word) VALUES ($1) ON CONFLICT DO NOTHING',
-            [$cleanedWord]
+        $insertResult = pg_insert($dbh, 'dictionary',
+            [
+                'word' => $cleanedWord
+            ]
         );
+
         if (!$insertResult) {
             print pg_last_error($dbh) . PHP_EOL;
             continue;
