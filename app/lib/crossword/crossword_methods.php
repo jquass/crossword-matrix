@@ -47,7 +47,7 @@ function findTemplateInScope(array $puzzle, string $scope): array
 function validateTemplate(string $template): bool
 {
     return $template
-        && !str_contains($template, BLANK)
+        && !strpos ($template, BLANK)
         && (substr_count($template, WILD) +
             substr_count($template, CONSONANT) +
             substr_count($template, VOWEL) >= 2);
