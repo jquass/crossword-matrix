@@ -103,6 +103,7 @@ if ('GET' === $_SERVER['REQUEST_METHOD']) {
 
     // After POST, reload page for fresh state
     header('Location: ' . $_SERVER['REQUEST_URI']);
+    exit();
 
 } else {
     die('invalid request method : ' . $_SERVER['REQUEST_METHOD']);
