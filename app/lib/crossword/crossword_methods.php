@@ -44,7 +44,7 @@ function findTemplateInScope(array $puzzle, string $scope): array
  * @param string $template
  * @return bool
  */
-#[Pure] function validateTemplate(string $template): bool
+function validateTemplate(string $template): bool
 {
     return $template
         && !str_contains($template, BLANK)
