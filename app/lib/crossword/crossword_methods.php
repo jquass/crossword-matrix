@@ -1,7 +1,5 @@
 <?php
 
-use JetBrains\PhpStorm\Pure;
-
 const SOLID = '*';
 const WILD = '.';
 const CONSONANT = ',';
@@ -118,7 +116,7 @@ function transposePuzzle(array $puzzle): array
  * @Param int $size
  * @return array[] $puzzle
  */
-#[Pure] function getPuzzleFromRequest(array $request, int $size): array
+function getPuzzleFromRequest(array $request, int $size): array
 {
     $puzzle = [];
     $cell = 1;
