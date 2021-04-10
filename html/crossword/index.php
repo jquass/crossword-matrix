@@ -41,7 +41,7 @@ if ('GET' === $_SERVER['REQUEST_METHOD']) {
     switch ($_POST['form_type']) {
         case 'puzzle':
             $name = array_key_exists('name', $_POST)
-                ? $_REQUEST['name']
+                ? $_POST['name']
                 : DEFAULT_PUZZLE_NAME;
             $puzzleId = array_key_exists('id', $_POST)
                 ? $_POST['id']
@@ -64,9 +64,10 @@ if ('GET' === $_SERVER['REQUEST_METHOD']) {
                 } else {
                     $puzzle = $savedPuzzle;
                 }
-                $name = $savedPuzzle['puzzle_name'];
             }
+
             break;
+
         case 'puzzle_dictionary_match':
 
             $puzzleId = array_key_exists('puzzle_id', $_POST)
@@ -102,8 +103,23 @@ if ('GET' === $_SERVER['REQUEST_METHOD']) {
     }
 
     // After POST, reload page for fresh state
-    header('Location: ' . $_SERVER['REQUEST_URI']);
-    exit();
+    if ($savedPuzzle) {
+
+        $url = $_SERVER['REQUEST_URI'];
+        $parsedUrl = parse_url($url);
+
+        if (array_key_exists('query', $parsedUrl) && $parsedUrl['query']) {
+            $newUrl = $url . '&id=' . $savedPuzzle['id'];
+        } else {
+            $newUrl = $newUrl = $parsedUrl['path'] . '?id=' . $savedPuzzle['id'];
+        }
+
+        header("Location:" . $newUrl);
+        exit();
+    } else {
+        header('Location: ' . $_SERVER['REQUEST_URI']);
+        exit();
+    }
 
 } else {
     die('invalid request method : ' . $_SERVER['REQUEST_METHOD']);
@@ -150,15 +166,15 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
 <header>
     <div class="clearfix">
         <div class="header_div">
-        <a href="#" onclick="window.location='../index.php'+window.location.search;">
-            Puzzle Index
-        </a>
+            <a href="#" onclick="window.location='../index.php'+window.location.search;">
+                Puzzle Index
+            </a>
         </div>
 
         <div class="header_div">
-        <a href="#" onclick="window.location='../dictionary/index.php'+window.location.search;">
-            Manage Dictionary
-        </a>
+            <a href="#" onclick="window.location='../dictionary/index.php'+window.location.search;">
+                Manage Dictionary
+            </a>
         </div>
     </div>
 </header>
