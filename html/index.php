@@ -5,14 +5,16 @@ require_once '../app/db/users_db.php';
 
 include '../app/includes/login.php';
 
-$puzzleId = array_key_exists('id', $_GET)
+const PUZZLE_URL = 'crossword/index.php?id=';
+
+$savedPuzzleId = array_key_exists('id', $_GET)
     ? $_GET['id']
     : null;
 
-$puzzleUrl = '/crossword/index.php?id=' . $puzzleId;
+$savedPuzzleUrl = PUZZLE_URL . $savedPuzzleId;
 
-$savedPuzzle = $puzzleId
-    ? getSavedPuzzle($puzzleId)
+$savedPuzzle = $savedPuzzleId
+    ? getSavedPuzzle($savedPuzzleId)
     : null;
 
 $savedPuzzles = getSavedPuzzles();
@@ -25,23 +27,20 @@ $savedPuzzles = getSavedPuzzles();
 
 <?php
 if ($savedPuzzle) {
-    echo "<button onclick=\"{$puzzleUrl}\"> Back to \"{$savedPuzzle['puzzle_name']}\" </button>";
+    echo "<button onclick=\"window.location='{$savedPuzzleUrl}'\"> Back to \"{$savedPuzzle['puzzle_name']}\" </button>";
 }
 ?>
 
-<button onclick="window.location=removeParam('id', 'crossword/index.php'+window.location.search);">Create New Puzzle
-</button>
-<button onclick="window.location=removeParam('id', 'dictionary/index.php'+window.location.search);">Manage Dictionary
-</button>
+<button onclick="window.location='crossword/index.php';"> Create New Puzzle </button>
+<button onclick="window.location='dictionary/index.php';"> Manage Dictionary </button>
 
 <ul>
     <?php
     foreach ($savedPuzzles as $savedPuzzle) {
-        echo "<li><button 
-                    onclick=\"window.location=removeParam('id', 'crossword/index.php'+window.location.search)+'&id={$savedPuzzle['id']}';\"
-              >
-              {$savedPuzzle['puzzle_name']}
-              </button></li>";
+        $puzzleUrl = PUZZLE_URL . $savedPuzzle['id'];
+        echo "<li>
+                <button onclick=\"window.location='{$puzzleUrl}';\">{$savedPuzzle['puzzle_name']}</button>
+            </li>";
     }
     ?>
 </ul>
@@ -49,23 +48,7 @@ if ($savedPuzzle) {
 
 <footer>
     <script>
-        function removeParam(key, sourceURL) {
-            let rtn = sourceURL.split("?")[0],
-                param,
-                params_arr = [],
-                queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
-            if (queryString !== "") {
-                params_arr = queryString.split("&");
-                for (let i = params_arr.length - 1; i >= 0; i -= 1) {
-                    param = params_arr[i].split("=")[0];
-                    if (param === key) {
-                        params_arr.splice(i, 1);
-                    }
-                }
-                if (params_arr.length) rtn = rtn + "?" + params_arr.join("&");
-            }
-            return rtn;
-        }
+
     </script>
 </footer>
 
