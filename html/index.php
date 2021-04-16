@@ -9,6 +9,8 @@ $puzzleId = array_key_exists('id', $_GET)
     ? $_GET['id']
     : null;
 
+$puzzleUrl = '/crossword/index.php?id=' . $puzzleId;
+
 $savedPuzzle = $puzzleId
     ? getSavedPuzzle($puzzleId)
     : null;
@@ -23,7 +25,7 @@ $savedPuzzles = getSavedPuzzles();
 
 <?php
 if ($savedPuzzle) {
-    echo "<button onclick=\"window.location=removeParam('id', 'crossword/index.php'+window.location.search)+'&id={$savedPuzzle['id']}';\"> Back to \"{$savedPuzzle['puzzle_name']}\" </button>";
+    echo "<button onclick=\"{$puzzleUrl}\"> Back to \"{$savedPuzzle['puzzle_name']}\" </button>";
 }
 ?>
 
