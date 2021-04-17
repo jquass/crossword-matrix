@@ -85,10 +85,20 @@ function insertWords(string $words): bool
             continue;
         }
 
-        $insertResult = pg_query_params(
+        $selectResult = pg_select(
             $dbh,
-            'INSERT INTO dictionary (word) VALUES ($1) ON CONFLICT DO NOTHING',
-            [$cleanedWord]
+            'dictionary',
+            ['word' => $cleanedWord]
+        );
+
+        if ($selectResult) {
+            continue;
+        }
+
+        $insertResult = pg_insert($dbh, 'dictionary',
+            [
+                'word' => $cleanedWord
+            ]
         );
 
         if (!$insertResult) {
