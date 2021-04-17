@@ -202,14 +202,14 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
                 $backgroundColor = 'white';
             }
 
-            echo "<input type='text'
-                    class='cell_input'
-                    onchange='cellValueChange(this.id, this.value)'
-                    style='background-color:{$backgroundColor};' 
+            echo "<input type=\"text\"
+                    class=\"cell_input\"
+                    onchange=\"cellValueChange(this.id, this.value)\"
+                    style=\"background-color:{$backgroundColor};\" 
                     size=2
-                    name='{$name}'
-                    id='{$name}'
-                    value='{$value}'>";
+                    name=\"{$name}\"
+                    id=\"{$name}\"
+                    value=\"{$value}\">";
 
             echo $n % PUZZLE_SIZE == 0 ? '<br/>' : '';
         }

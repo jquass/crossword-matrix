@@ -1,11 +1,13 @@
 .cell_input {
     text-align: center;
     font-weight: bold;
-    font-family: courier;
+    font-family: courier, monospace;
 }
 
 .puzzle_dictionary_match_input {
     float: left;
+    font-weight: bold;
+    font-family: courier, monospace;
 }
 
 .header_div {
