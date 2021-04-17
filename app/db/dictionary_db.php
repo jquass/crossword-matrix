@@ -146,3 +146,16 @@ function getMatchingDictionaryEntries(array $template, int $limit): array
     return $return;
 }
 
+/**
+ * @param int $id
+ * @return bool|string|null
+ */
+function deleteSavedWord(int $id)
+{
+    $dbh = pg_connect(CONNECTION_STRING);
+    if (!$dbh) {
+        return null;
+    }
+
+    return pg_delete($dbh, 'dictionary', ['id' => $id]);
+}

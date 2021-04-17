@@ -31,11 +31,16 @@ $dictionaryEntries = getDictionaryEntries(LIMIT);
     <input type="submit" value="Save" name="btnSubmit">
 </form>
 
-<h1>Dictionary</h1>
+<h1>Last <?= LIMIT ?> Dictionary Entries</h1>
 
 <?php
 foreach ($dictionaryEntries as $entry) {
-    print $entry['word'] . '<br>';
+    echo "<div>
+            <a href=\"#\" onclick=\"window.location='../dictionary/delete/index.php?id={$entry['id']}';\">
+                X
+            </a>
+            {$entry['word']}
+        </div><br>";
 }
 ?>
 
