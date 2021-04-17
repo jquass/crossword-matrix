@@ -19,11 +19,27 @@ $dictionaryEntries = getDictionaryEntries(LIMIT);
 
 <html>
 <head>
-
+    <link href="dictionary.css" rel="stylesheet">
 </head>
 <body>
 <header>
-    <a href="#" onclick="window.location='../index.php'+window.location.search;"><<< Puzzle Index</a>
+
+    <header>
+        <div class="clearfix">
+            <div class="header_div">
+                <a href="#" onclick="window.location='../../index.php';">
+                    Puzzle Index
+                </a>
+            </div>
+
+            <div class="header_div">
+                <a href="#" onclick="window.location='../../dictionary/index.php';">
+                    Manage Dictionary
+                </a>
+            </div>
+        </div>
+    </header>
+
 </header>
 <h1>Add Words</h1>
 <form method="post" id="words">
@@ -33,16 +49,16 @@ $dictionaryEntries = getDictionaryEntries(LIMIT);
 
 <h1>Last <?= LIMIT ?> Dictionary Entries</h1>
 
+<div class="clearfix">
 <?php
 foreach ($dictionaryEntries as $entry) {
-    echo "<div>
-            <a href=\"#\" onclick=\"window.location='../dictionary/delete/index.php?id={$entry['id']}';\">
-                X
-            </a>
-            {$entry['word']}
+    echo "<div class=\"dictionary_entry\">
+            <a href=\"#\" onclick=\"window.location='../dictionary/delete/index.php?id={$entry['id']}';\">X</a>
+             {$entry['word']}
         </div><br>";
 }
 ?>
+</div>
 
 </body>
 </html>
