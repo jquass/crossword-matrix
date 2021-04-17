@@ -1,0 +1,20 @@
+.cell_input {
+    text-align: center;
+    font-weight: bold;
+    font-family: courier;
+}
+
+.puzzle_dictionary_match_input {
+    float: left;
+}
+
+.header_div {
+    padding: 10px;
+    float: left;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
