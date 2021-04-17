@@ -1,0 +1,11 @@
+
+.header_div {
+    padding: 10px;
+    float: left;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}

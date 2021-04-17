@@ -1,11 +1,11 @@
 <?php
 
+require_once '../../app/db/users_db.php';
+include '../../app/includes/login.php';
+
 require_once '../../app/db/crossword_db.php';
 require_once '../../app/db/dictionary_db.php';
 require_once '../../app/lib/crossword/crossword_methods.php';
-
-require_once '../../app/db/users_db.php';
-include '../../app/includes/login.php';
 
 const DEFAULT_PUZZLE_NAME = 'New Puzzle';
 const PUZZLE_SIZE = 15;
@@ -155,6 +155,18 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
                 Manage Dictionary
             </a>
         </div>
+
+        <?php
+        if ($savedPuzzle) {
+            echo
+        '<div class="header_div">
+            <a href="#" onclick="window.location=\'../crossword/delete/index.php\'+window.location.search;">
+                Delete Puzzle
+            </a>
+        </div>';
+        }
+        ?>
+
     </div>
 </header>
 

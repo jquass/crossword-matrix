@@ -118,3 +118,17 @@ function updateSavedPuzzle(int $id, array $puzzle, string $name = null): ?array
 
     return $result ? getSavedPuzzle($id) : null;
 }
+
+/**
+ * @param int $id
+ * @return bool|string|null
+ */
+function deleteSavedPuzzle(int $id)
+{
+    $dbh = pg_connect(CONNECTION_STRING);
+    if (!$dbh) {
+        return null;
+    }
+
+    return pg_delete($dbh, 'puzzles', ['id' => $id]);
+}
