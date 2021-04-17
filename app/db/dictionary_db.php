@@ -73,8 +73,10 @@ function insertWords(string $words): bool
         return false;
     }
 
-    foreach (preg_split('/\s+/', $words) as $word) {
-        $cleanedWord = strtoupper(trim($word));
+    foreach (preg_split("/\r\n|\r|\n/", $words) as $word) {
+
+        $cleanedWord = strtoupper(preg_replace('/[^a-zA-Z]+/', '', $word));
+
         if (preg_match('/[^a-zA-Z]+/', $cleanedWord)) {
             print "Skipping word with invalid characters {$cleanedWord}" . PHP_EOL;
             continue;
@@ -83,10 +85,10 @@ function insertWords(string $words): bool
             continue;
         }
 
-        $insertResult = pg_insert($dbh, 'dictionary',
-            [
-                'word' => $cleanedWord
-            ]
+        $insertResult = pg_query_params(
+            $dbh,
+            'INSERT INTO dictionary (word) VALUES ($1) ON CONFLICT DO NOTHING',
+            [$cleanedWord]
         );
 
         if (!$insertResult) {

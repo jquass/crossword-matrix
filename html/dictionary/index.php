@@ -8,7 +8,16 @@ include '../../app/includes/login.php';
 const LIMIT = 100;
 
 if ('POST' === $_SERVER['REQUEST_METHOD']) {
-    insertWords($_REQUEST['words']);
+
+    switch ($_POST['form_type']) {
+        case 'create_dictionary_entries':
+            insertWords($_POST['words']);
+            break;
+        default:
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit();
+    }
+
 } else if ('GET' !== $_SERVER['REQUEST_METHOD']) {
     die('invalid request method : ' . $_SERVER['REQUEST_METHOD']);
 }
@@ -27,13 +36,13 @@ $dictionaryEntries = getDictionaryEntries(LIMIT);
     <header>
         <div class="clearfix">
             <div class="header_div">
-                <a href="#" onclick="window.location='../../index.php';">
+                <a href="#" onclick="window.location='../index.php';">
                     Puzzle Index
                 </a>
             </div>
 
             <div class="header_div">
-                <a href="#" onclick="window.location='../../dictionary/index.php';">
+                <a href="#" onclick="window.location='../dictionary/index.php';">
                     Manage Dictionary
                 </a>
             </div>
@@ -43,7 +52,12 @@ $dictionaryEntries = getDictionaryEntries(LIMIT);
 </header>
 <h1>Add Words</h1>
 <form method="post" id="words">
-    <input type="text" name="words" width="21" height="500">
+    <input type="hidden" name="form_type" value="create_dictionary_entries">
+
+    <label>
+        <textarea name="words" rows="5" cols="50"></textarea>
+    </label>
+    <br>
     <input type="submit" value="Save" name="btnSubmit">
 </form>
 
