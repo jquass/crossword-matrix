@@ -154,6 +154,7 @@ function getMatchingDictionaryEntries(array $template, int $limit): array
 
     pg_free_result($result);
     pg_close($dbh);
+    asort($return);
 
     return $return;
 }

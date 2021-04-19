@@ -219,12 +219,19 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
     <div class="clearfix">
         <?php
         if ($matchingDictionaryEntries) {
+            $sortedDictionaryEntries = [];
+
+            foreach ($matchingDictionaryEntries as $matchingDictionaryEntry) {
+                $sortedDictionaryEntries[$matchingDictionaryEntry['id']] = $matchingDictionaryEntry['word'];
+            }
+            asort($sortedDictionaryEntries);
+
             echo '<form name="puzzle_dictionary_match" method="post" id="puzzle_dictionary_match">
                     <input type="submit" value="Fill Template" class="puzzle_dictionary_match_input"><br><br>';
-            foreach ($matchingDictionaryEntries as $dictionaryEntry) {
+            foreach ($sortedDictionaryEntries as $id => $word) {
                 echo "<div class='puzzle_dictionary_match_input'>
-                        <input type='radio' name='dictionary_id' value='{$dictionaryEntry['id']}'>
-                        <label for='{$dictionaryEntry['id']}'> {$dictionaryEntry['word']} </label>
+                        <input type='radio' name='dictionary_id' value='{$id}'>
+                        <label for='{$id}'> {$word} </label>
                     </div>";
             }
             echo "<input type='hidden' name='form_type' value='puzzle_dictionary_match'>
