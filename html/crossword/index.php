@@ -247,11 +247,11 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
                     } else {
 
                         if ($wordLen % 2 == 0) {
-                            $wordStart = substr($word, 0, $wordLen / 2 - 2);
+                            $wordStart = substr($word, 0, $wordLen / 2 - 1);
                             $wordMiddle = substr($word, $wordLen / 2 - 1, 2);
                             $wordEnd = substr($word, $wordLen / 2 + 1);
                         } else {
-                            $wordStart = substr($word, 0, $wordLen / 2 - 1);
+                            $wordStart = substr($word, 0, $wordLen / 2 );
                             $wordMiddle = substr($word, $wordLen / 2 , 1);
                             $wordEnd = substr($word, $wordLen / 2 + 1);
                         }
