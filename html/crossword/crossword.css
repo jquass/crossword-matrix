@@ -1,17 +1,29 @@
 .cell_input {
     text-align: center;
     font-weight: bold;
-    font-family: courier, monospace;
+    font-family: "Courier New", monospace;
 }
 
-.puzzle_dictionary_match_input {
-    float: left;
+.dictionary_match_input {
+    text-align: center;
+    padding: 2px;
     font-weight: bold;
-    font-family: courier, monospace;
+    font-family: "Courier New", monospace;
+    margin-right: 10px;
+    margin-left: 2px;
 }
+
 
 .header_div {
     padding: 10px;
+    float: left;
+}
+
+#puzzle {
+    float: left;
+}
+
+#dictionary_matches {
     float: left;
 }
 
@@ -19,4 +31,8 @@
     content: "";
     clear: both;
     display: table;
+}
+
+.left {
+    float: left;
 }

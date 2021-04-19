@@ -10,6 +10,7 @@ require_once '../../app/lib/crossword/crossword_methods.php';
 const DEFAULT_PUZZLE_NAME = 'New Puzzle';
 const PUZZLE_SIZE = 15;
 const DICTIONARY_MATCHES = 100;
+const COLUMN_LENGTH = 18;
 
 $puzzle = [];
 $savedPuzzle = null;
@@ -99,27 +100,33 @@ if ('GET' === $_SERVER['REQUEST_METHOD']) {
             break;
 
         default:
-            break;
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit();
     }
 
     // After POST, reload page for fresh state
-    if ($savedPuzzle) {
+    if ($puzzleId) {
 
         $url = $_SERVER['REQUEST_URI'];
         $parsedUrl = parse_url($url);
 
         if (array_key_exists('query', $parsedUrl) && $parsedUrl['query']) {
-            $newUrl = $url . '&id=' . $savedPuzzle['id'];
-        } else {
-            $newUrl = $newUrl = $parsedUrl['path'] . '?id=' . $savedPuzzle['id'];
+            $query = $parsedUrl['query'];
+            foreach( explode('&', $query) as $param) {
+                $parsedParam = explode('=', $param);
+                if ($parsedParam and $parsedParam[0] == 'id') {
+                    header('Location: ' . $_SERVER['REQUEST_URI']);
+                    exit();
+                }
+            }
         }
 
-        header("Location:" . $newUrl);
-        exit();
-    } else {
-        header('Location: ' . $_SERVER['REQUEST_URI']);
+        header('Location: ' . $_SERVER['REQUEST_URI'] . '?id=' . $puzzleId);
         exit();
     }
+
+    header('Location: ' . $_SERVER['REQUEST_URI']);
+    exit();
 
 } else {
     die('invalid request method : ' . $_SERVER['REQUEST_METHOD']);
@@ -159,7 +166,7 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
         <?php
         if ($savedPuzzle) {
             echo
-        '<div class="header_div">
+            '<div class="header_div">
             <a href="#" onclick="window.location=\'../crossword/delete/index.php\'+window.location.search;">
                 Delete Puzzle
             </a>
@@ -170,39 +177,40 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
     </div>
 </header>
 
-<div class="main">
+<div id="main" class="clearfix">
 
-    <form name="puzzle" method="post" id="puzzle">
+    <div id="puzzle">
+        <form name="puzzle" method="post">
 
-        <input type="hidden" name="form_type" value="puzzle">
+            <input type="hidden" name="form_type" value="puzzle">
 
-        <input type="hidden" name="id" value="<?= $puzzleId ?>">
+            <input type="hidden" name="id" value="<?= $puzzleId ?>">
 
-        <div class="header_div">
-            <input type="text" name="name" value="<?= $name ?>">
+            <div class="header_div">
+                <input type="text" name="name" value="<?= $name ?>">
 
-            <input type="submit" value="<?= $savedPuzzle ? 'Update' : 'Save' ?>" name="btnSubmit"><br>
-        </div>
+                <input type="submit" value="<?= $savedPuzzle ? 'Update' : 'Save' ?>" name="btnSubmit"><br>
+            </div>
 
-        <br>
-        <br>
-        <br>
+            <br>
+            <br>
+            <br>
 
-        <?php
-        for ($n = 1; $n <= PUZZLE_SIZE * PUZZLE_SIZE; $n++) {
-            $name = 'c' . $n;
+            <?php
+            for ($n = 1; $n <= PUZZLE_SIZE * PUZZLE_SIZE; $n++) {
+                $name = 'c' . $n;
 
-            $value = array_key_exists($name, $oneDimensionalPuzzle) ? $oneDimensionalPuzzle[$name] : BLANK;
+                $value = array_key_exists($name, $oneDimensionalPuzzle) ? $oneDimensionalPuzzle[$name] : BLANK;
 
-            if (array_key_exists($name, $template)) {
-                $backgroundColor = 'yellow';
-            } else if (str_replace(' ', '', $value) == SOLID) {
-                $backgroundColor = 'black';
-            } else {
-                $backgroundColor = 'white';
-            }
+                if (array_key_exists($name, $template)) {
+                    $backgroundColor = 'yellow';
+                } else if (str_replace(' ', '', $value) == SOLID) {
+                    $backgroundColor = 'black';
+                } else {
+                    $backgroundColor = 'white';
+                }
 
-            echo "<input type=\"text\"
+                echo "<input type=\"text\"
                     class=\"cell_input\"
                     onchange=\"cellValueChange(this.id, this.value)\"
                     style=\"background-color:{$backgroundColor};\" 
@@ -211,12 +219,13 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
                     id=\"{$name}\"
                     value=\"{$value}\">";
 
-            echo $n % PUZZLE_SIZE == 0 ? '<br/>' : '';
-        }
-        ?>
-    </form>
+                echo $n % PUZZLE_SIZE == 0 ? '<br/>' : '';
+            }
+            ?>
+        </form>
+    </div>
 
-    <div class="clearfix">
+    <div id="dictionary_matches">
         <?php
         if ($matchingDictionaryEntries) {
             $sortedDictionaryEntries = [];
@@ -226,13 +235,18 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
             }
             asort($sortedDictionaryEntries);
 
-            echo '<form name="puzzle_dictionary_match" method="post" id="puzzle_dictionary_match">
-                    <input type="submit" value="Fill Template" class="puzzle_dictionary_match_input"><br><br>';
-            foreach ($sortedDictionaryEntries as $id => $word) {
-                echo "<div class='puzzle_dictionary_match_input'>
-                        <input type='radio' name='dictionary_id' value='{$id}'>
-                        <label for='{$id}'> {$word} </label>
+            echo '<form name="dictionary_match" method="post">
+                    <input type="submit" value="Fill Template"><br><br>';
+            foreach (array_chunk($sortedDictionaryEntries, COLUMN_LENGTH, true) as $sortedDictionaryColumn) {
+                echo '<div class="left">';
+                foreach ($sortedDictionaryColumn as $id => $word) {
+                    echo "<div class='dictionary_match_input'>
+                        <input id='{$id}' type='radio' name='dictionary_id' value='{$id}'>
+                        <a href=\"#\" onclick=\"window.location='../dictionary/delete/index.php?id={$id}';\">X</a>
+                        <label for='{$id}'>{$word}</label>
                     </div>";
+                }
+                echo '</div>';
             }
             echo "<input type='hidden' name='form_type' value='puzzle_dictionary_match'>
                     <input type='hidden' name='puzzle_id' value='{$puzzleId}'>
