@@ -21,9 +21,11 @@
 
 #puzzle {
     float: left;
+    margin-right: 15px;
 }
 
 #dictionary_matches {
+    padding: 10px;
     float: left;
 }
 
@@ -35,4 +37,9 @@
 
 .left {
     float: left;
+}
+
+mark {
+    background-color: yellow;
+    color: black;
 }

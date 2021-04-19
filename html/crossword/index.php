@@ -240,10 +240,29 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
             foreach (array_chunk($sortedDictionaryEntries, COLUMN_LENGTH, true) as $sortedDictionaryColumn) {
                 echo '<div class="left">';
                 foreach ($sortedDictionaryColumn as $id => $word) {
+
+                    $wordLen = strlen($word);
+                    if ($wordLen <= 2) {
+                        $markedWord = $word;
+                    } else {
+
+                        if ($wordLen % 2 == 0) {
+                            $wordStart = substr($word, 0, $wordLen / 2 - 2);
+                            $wordMiddle = substr($word, $wordLen / 2 - 1, 2);
+                            $wordEnd = substr($word, $wordLen / 2 + 1);
+                        } else {
+                            $wordStart = substr($word, 0, $wordLen / 2 - 1);
+                            $wordMiddle = substr($word, $wordLen / 2 , 1);
+                            $wordEnd = substr($word, $wordLen / 2 + 1);
+                        }
+
+                        $markedWord = "{$wordStart}<mark>{$wordMiddle}</mark>{$wordEnd}";
+                    }
+
                     echo "<div class='dictionary_match_input'>
                         <input id='{$id}' type='radio' name='dictionary_id' value='{$id}'>
                         <a href=\"#\" onclick=\"window.location='../dictionary/delete/index.php?id={$id}';\">X</a>
-                        <label for='{$id}'>{$word}</label>
+                        <label for='{$id}'>{$markedWord}</label>
                     </div>";
                 }
                 echo '</div>';
