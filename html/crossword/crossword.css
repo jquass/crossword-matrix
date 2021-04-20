@@ -29,6 +29,8 @@
     float: left;
 }
 
+
+
 .clearfix::after {
     content: "";
     clear: both;
@@ -37,6 +39,12 @@
 
 .left {
     float: left;
+}
+
+.scroll_box {
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 50%;
 }
 
 mark {

@@ -237,7 +237,8 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
 
             echo '<form name="dictionary_match" method="post">
                     <input type="submit" value="Fill Template"><br><br>';
-            foreach (array_chunk($sortedDictionaryEntries, COLUMN_LENGTH, true) as $sortedDictionaryColumn) {
+            echo '<div class="scroll_box">';
+            foreach (array_chunk($sortedDictionaryEntries, sizeof($sortedDictionaryEntries) / 2, true) as $sortedDictionaryColumn) {
                 echo '<div class="left">';
                 foreach ($sortedDictionaryColumn as $id => $word) {
 
@@ -267,6 +268,7 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
                 }
                 echo '</div>';
             }
+            echo '</div>';
             echo "<input type='hidden' name='form_type' value='puzzle_dictionary_match'>
                     <input type='hidden' name='puzzle_id' value='{$puzzleId}'>
                     <input type='hidden' name='template' value='{$serializedTemplate}'>
