@@ -9,8 +9,7 @@ require_once '../../app/lib/crossword/crossword_methods.php';
 
 const DEFAULT_PUZZLE_NAME = 'New Puzzle';
 const PUZZLE_SIZE = 15;
-const DICTIONARY_MATCHES = 100;
-const COLUMN_LENGTH = 18;
+const DICTIONARY_MATCHES = 1000;
 
 $puzzle = [];
 $savedPuzzle = null;
