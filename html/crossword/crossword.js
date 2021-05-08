@@ -58,10 +58,8 @@ const cellValueChange = function (id, value) {
 
     if (value.trim() === '*') {
         element.style.backgroundColor = 'black';
-        if (symmetricalValue === ' ') {
-            symmetricalElement.style.backgroundColor = 'black';
-            symmetricalElement.setAttribute('value', '*');
-        }
+        symmetricalElement.style.backgroundColor = 'black';
+        symmetricalElement.setAttribute('value', '*');
     } else {
         element.style.backgroundColor = 'white';
         if (symmetricalValue.trim() === '*') {
