@@ -46,6 +46,10 @@ if ($savedPuzzle) {
 </ul>
 
 
+<form method="post" id="logout">
+    <input type="submit" value="Logout" name="btnSubmit">
+</form>
+
 <footer>
     <script>
 

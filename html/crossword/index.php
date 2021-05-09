@@ -300,12 +300,6 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
         }
         ?>
 
-        <div class="header_div">
-            <form method="post" id="logout">
-                <input type="submit" value="Logout" name="btnSubmit">
-            </form>
-        </div>
-
     </div>
 
 
