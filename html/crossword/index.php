@@ -247,7 +247,7 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
                             ?>
                             <div class='dictionary_match_input'>
                                 <input id='<?= $id ?>' type='radio' name='dictionary_id' value='{$id}'>
-                                <a href="#" onclick="window.location='../dictionary/delete/index.php?id={$id}';">X</a>
+                                <a href="#" onclick="window.location='../dictionary/delete/index.php?id=<?= $id ?>';">X</a>
                                 <label for='<?= $id ?>'><?= $markedWord ?></label>
                             </div>
                             <?php
