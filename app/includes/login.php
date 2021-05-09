@@ -33,8 +33,3 @@ if (empty($_SESSION) || !array_key_exists('email', $_SESSION) || !$_SESSION['ema
 </form>
     ');
 }
-?>
-
-<form method="post" id="logout">
-    <input type="submit" value="Logout" name="btnSubmit">
-</form>

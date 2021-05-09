@@ -148,33 +148,7 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
 
 <body>
 
-<header>
-    <div class="clearfix">
-        <div class="header_div">
-            <a href="#" onclick="window.location='../index.php'+window.location.search;">
-                Puzzle Index
-            </a>
-        </div>
 
-        <div class="header_div">
-            <a href="#" onclick="window.location='../dictionary/index.php'+window.location.search;">
-                Manage Dictionary
-            </a>
-        </div>
-
-        <?php
-        if ($savedPuzzle) {
-            echo
-            '<div class="header_div">
-            <a href="#" onclick="window.location=\'../crossword/delete/index.php\'+window.location.search;">
-                Delete Puzzle
-            </a>
-        </div>';
-        }
-        ?>
-
-    </div>
-</header>
 
 <div id="main" class="clearfix">
 
@@ -185,23 +159,14 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
 
             <input type="hidden" name="id" value="<?= $puzzleId ?>">
 
-            <div class="header_div">
-                <input type="text" name="name" value="<?= $name ?>">
-
-                <input type="submit" value="<?= $savedPuzzle ? 'Update' : 'Save' ?>" name="btnSubmit"><br>
-            </div>
-
-            <br>
-            <br>
-            <br>
 
             <?php
             for ($n = 1; $n <= PUZZLE_SIZE * PUZZLE_SIZE; $n++) {
-                $name = 'c' . $n;
+                $cellName = 'c' . $n;
 
-                $value = array_key_exists($name, $oneDimensionalPuzzle) ? $oneDimensionalPuzzle[$name] : BLANK;
+                $value = array_key_exists($cellName, $oneDimensionalPuzzle) ? $oneDimensionalPuzzle[$cellName] : BLANK;
 
-                if (array_key_exists($name, $template)) {
+                if (array_key_exists($cellName, $template)) {
                     $backgroundColor = 'yellow';
                 } else if (str_replace(' ', '', $value) == SOLID) {
                     $backgroundColor = 'black';
@@ -214,13 +179,20 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
                     onchange=\"cellValueChange(this.id, this.value)\"
                     style=\"background-color:{$backgroundColor};\" 
                     size=2
-                    name=\"{$name}\"
-                    id=\"{$name}\"
+                    name=\"{$cellName}\"
+                    id=\"{$cellName}\"
                     value=\"{$value}\">";
 
                 echo $n % PUZZLE_SIZE == 0 ? '<br/>' : '';
             }
             ?>
+
+            <div class="header_div">
+                <label for="name">Name: </label>
+                <input type="text" name="name" value="<?= $name ?>">
+                <br><br>
+                <input type="submit" value="<?= $savedPuzzle ? 'Update' : 'Save' ?>" name="btnSubmit"><br>
+            </div>
         </form>
     </div>
 
@@ -234,8 +206,7 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
             }
             asort($sortedDictionaryEntries);
 
-            echo '<form name="dictionary_match" method="post">
-                    <input type="submit" value="Fill Template"><br><br>';
+            echo '<form name="dictionary_match" method="post">';
             echo '<div class="scroll_box">';
             foreach (array_chunk($sortedDictionaryEntries, sizeof($sortedDictionaryEntries) / 2 + 1, true) as $sortedDictionaryColumn) {
                 echo '<div class="left">';
@@ -267,7 +238,8 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
                 }
                 echo '</div>';
             }
-            echo '</div>';
+            echo '</div><nr><br>';
+            echo '<input type="submit" value="Fill Template">';
             echo "<input type='hidden' name='form_type' value='puzzle_dictionary_match'>
                     <input type='hidden' name='puzzle_id' value='{$puzzleId}'>
                     <input type='hidden' name='template' value='{$serializedTemplate}'>
@@ -275,6 +247,43 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
         }
         ?>
     </div>
+</div>
+
+<div id="main_nav">
+    <div class="clearfix">
+        <div class="header_div">
+            <a href="#" onclick="window.location='../index.php'+window.location.search;">
+                Puzzle Index
+            </a>
+        </div>
+
+        <div class="header_div">
+            <a href="#" onclick="window.location='../dictionary/index.php'+window.location.search;">
+                Manage Dictionary
+            </a>
+        </div>
+
+        <?php
+        if ($savedPuzzle) {
+            echo
+            '<div class="header_div">
+            <a href="#" onclick="window.location=\'../crossword/delete/index.php\'+window.location.search;">
+                Delete Puzzle
+            </a>
+        </div>';
+        }
+        ?>
+
+        <div class="header_div">
+            <form method="post" id="logout">
+                <input type="submit" value="Logout" name="btnSubmit">
+            </form>
+        </div>
+
+    </div>
+
+
+
 </div>
 
 
