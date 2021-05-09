@@ -47,7 +47,7 @@ function findTemplateInScope(array $puzzle, string $scope): array
 function validateTemplate(string $template): bool
 {
     return $template
-        && !strpos ($template, BLANK)
+        && !strpos($template, BLANK)
         && (substr_count($template, WILD) +
             substr_count($template, CONSONANT) +
             substr_count($template, VOWEL) >= 2);
@@ -166,4 +166,21 @@ function convertPuzzleToTwoDimensions(array $oneDimensionalPuzzle): array
         $cell++;
     }
     return $puzzle;
+}
+
+/**
+ * @param array[] $puzzle
+ * @return array
+ */
+function clearTemplateFromPuzzle(array $puzzle): array
+{
+    $clearedPuzzle = [];
+    foreach ($puzzle as $row) {
+        $clearedRow = [];
+        foreach ($row as $id => $cell) {
+            $clearedRow[$id] = preg_match('/[.;,]/', $cell) ? '' : $cell;
+        }
+        $clearedPuzzle[] = $clearedRow;
+    }
+    return $clearedPuzzle;
 }

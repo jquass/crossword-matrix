@@ -98,6 +98,20 @@ if ('GET' === $_SERVER['REQUEST_METHOD']) {
             updateSavedPuzzle($puzzleId, $updatedPuzzle);
             break;
 
+        case 'puzzle_clear_dictionary_match':
+
+            $puzzleId = array_key_exists('puzzle_id', $_POST)
+                ? $_POST['puzzle_id']
+                : null;
+
+            $savedPuzzle = getSavedPuzzle($puzzleId);
+            $puzzle = unserialize($savedPuzzle['puzzle']);
+
+            $clearedPuzzle = clearTemplateFromPuzzle($puzzle);
+
+            updateSavedPuzzle($puzzleId, $clearedPuzzle);
+            break;
+
         default:
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit();
@@ -111,7 +125,7 @@ if ('GET' === $_SERVER['REQUEST_METHOD']) {
 
         if (array_key_exists('query', $parsedUrl) && $parsedUrl['query']) {
             $query = $parsedUrl['query'];
-            foreach( explode('&', $query) as $param) {
+            foreach (explode('&', $query) as $param) {
                 $parsedParam = explode('=', $param);
                 if ($parsedParam and $parsedParam[0] == 'id') {
                     header('Location: ' . $_SERVER['REQUEST_URI']);
@@ -147,7 +161,6 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
 </head>
 
 <body>
-
 
 
 <div id="main" class="clearfix">
@@ -205,47 +218,60 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
                 $sortedDictionaryEntries[$matchingDictionaryEntry['id']] = $matchingDictionaryEntry['word'];
             }
             asort($sortedDictionaryEntries);
+            ?>
 
-            echo '<form name="dictionary_match" method="post">';
-            echo '<div class="scroll_box">';
-            foreach (array_chunk($sortedDictionaryEntries, sizeof($sortedDictionaryEntries) / 2 + 1, true) as $sortedDictionaryColumn) {
-                echo '<div class="left">';
-                foreach ($sortedDictionaryColumn as $id => $word) {
+            <form name="dictionary_match" method="post">
+                <div class="scroll_box">
+                    <?php
+                    foreach (array_chunk($sortedDictionaryEntries, sizeof($sortedDictionaryEntries) / 2 + 1, true) as $sortedDictionaryColumn) {
+                        echo '<div class="left">';
+                        foreach ($sortedDictionaryColumn as $id => $word) {
 
-                    $wordLen = strlen($word);
-                    if ($wordLen <= 2) {
-                        $markedWord = $word;
-                    } else {
+                            $wordLen = strlen($word);
+                            if ($wordLen <= 2) {
+                                $markedWord = $word;
+                            } else {
 
-                        if ($wordLen % 2 == 0) {
-                            $wordStart = substr($word, 0, $wordLen / 2 - 1);
-                            $wordMiddle = substr($word, $wordLen / 2 - 1, 2);
-                            $wordEnd = substr($word, $wordLen / 2 + 1);
-                        } else {
-                            $wordStart = substr($word, 0, $wordLen / 2 );
-                            $wordMiddle = substr($word, $wordLen / 2 , 1);
-                            $wordEnd = substr($word, $wordLen / 2 + 1);
+                                if ($wordLen % 2 == 0) {
+                                    $wordStart = substr($word, 0, $wordLen / 2 - 1);
+                                    $wordMiddle = substr($word, $wordLen / 2 - 1, 2);
+                                    $wordEnd = substr($word, $wordLen / 2 + 1);
+                                } else {
+                                    $wordStart = substr($word, 0, $wordLen / 2);
+                                    $wordMiddle = substr($word, $wordLen / 2, 1);
+                                    $wordEnd = substr($word, $wordLen / 2 + 1);
+                                }
+
+                                $markedWord = "{$wordStart}<mark>{$wordMiddle}</mark>{$wordEnd}";
+                            }
+                            ?>
+                            <div class='dictionary_match_input'>
+                                <input id='<?= $id ?>' type='radio' name='dictionary_id' value='{$id}'>
+                                <a href="#" onclick="window.location='../dictionary/delete/index.php?id={$id}';">X</a>
+                                <label for='<?= $id ?>'><?= $markedWord ?></label>
+                            </div>
+                            <?php
                         }
-
-                        $markedWord = "{$wordStart}<mark>{$wordMiddle}</mark>{$wordEnd}";
+                        echo '</div>';
                     }
-
-                    echo "<div class='dictionary_match_input'>
-                        <input id='{$id}' type='radio' name='dictionary_id' value='{$id}'>
-                        <a href=\"#\" onclick=\"window.location='../dictionary/delete/index.php?id={$id}';\">X</a>
-                        <label for='{$id}'>{$markedWord}</label>
-                    </div>";
-                }
-                echo '</div>';
-            }
-            echo '</div><nr><br>';
-            echo '<input type="submit" value="Fill Template">';
-            echo "<input type='hidden' name='form_type' value='puzzle_dictionary_match'>
-                    <input type='hidden' name='puzzle_id' value='{$puzzleId}'>
-                    <input type='hidden' name='template' value='{$serializedTemplate}'>
-                </form>";
+                    ?>
+                </div>
+                <input type="submit" value="Fill Template">
+                <input type='hidden' name='form_type' value='puzzle_dictionary_match'>
+                <input type='hidden' name='puzzle_id' value='<?= $puzzleId ?>'>
+                <input type='hidden' name='template' value='<?= $serializedTemplate ?>'>
+            </form>
+            <?php
         }
         ?>
+    </div>
+
+    <div id="clear_template">
+        <form name="dictionary_match" method="post">
+            <input type="submit" value="Clear Template" name="btnSubmit">
+            <input type='hidden' name='puzzle_id' value='<?= $puzzleId ?>'>
+            <input type='hidden' name='form_type' value='puzzle_clear_dictionary_match'>
+        </form>
     </div>
 </div>
 
@@ -281,7 +307,6 @@ $oneDimensionalPuzzle = convertPuzzleToOneDimension($puzzle);
         </div>
 
     </div>
-
 
 
 </div>

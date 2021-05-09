@@ -30,7 +30,10 @@
     float: left;
 }
 
-
+#clear_template {
+    padding: 10px;
+    float: left;
+}
 
 .clearfix::after {
     content: "";
@@ -46,6 +49,7 @@
     overflow: scroll;
     overflow-x: hidden;
     height: 75%;
+    margin-bottom: 15px;
 }
 
 mark {
